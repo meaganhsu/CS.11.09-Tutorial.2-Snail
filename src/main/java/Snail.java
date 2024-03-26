@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Snail {
 
     /**
@@ -26,7 +28,44 @@ public class Snail {
      *         returns an empty array if array2d is not square.
      */
     public static int[] flattenSnail(int[][] array2d) {
-        return null;
+        if (array2d == null || !isPerfectSquare(array2d)) {
+            return new int[0];
+        }
+
+        int[] x = new int[array2d.length*array2d.length];
+        int row = 0;
+        int col = 0;
+        int direction = 1;       // n = 4, e = 1, s = 2, w = 3
+        int count = 0;    // 4,3,3,2,2,1,1 (len.arr,len-1x2,len-2x2...)
+
+        for (int i = 0; i < x.length; i++) {
+            if (direction == 1) {      // right
+                x[i] = array2d[row][col++];
+                if (col == array2d.length-count-1) {
+                    direction++;    // shifting down
+                }
+            } else if (direction == 2) {        // down
+                x[i] = array2d[row++][col];
+                if (row == array2d.length-count-1) {
+                    direction++;    // shifting left
+                }
+            } else if (direction == 3) {      // left
+                x[i] = array2d[row][col--];
+                if (col == count) {
+                    direction++;      // shifting up
+                    count++;
+                }
+            } else if (direction == 4) {       // up
+                x[i] = array2d[row--][col];
+                if (row == count-1) {
+                    direction = 1;      // shifting right
+                    col++;
+                    row++;
+                }
+            }
+        }
+
+        return x;
     }
 
     /**
@@ -58,7 +97,44 @@ public class Snail {
      *         returns an empty 2d array if the length of array1d is not a perfect square.
      */
     public static int[][] makeSnail(int[] array1d) {
-        return null;
+        if (array1d == null || !isPerfectSquare(array1d)) {
+            return new int[0][0];
+        }
+
+        int[][] x = new int[(int) Math.sqrt(array1d.length)][(int) Math.sqrt(array1d.length)];
+        int row = 0;
+        int col = 0;
+        int direction = 1;       // n = 4, e = 1, s = 2, w = 3
+        int count = 0;    // 4,3,3,2,2,1,1 (len.arr,len-1x2,len-2x2...)
+
+        for (int i = 0; i < array1d.length; i++) {
+            if (direction == 1) {      // right
+                 x[row][col++] = array1d[i];
+                 if (col == x.length-count-1) {
+                     direction++;    // shifting down
+                 }
+            } else if (direction == 2) {        // down
+                 x[row++][col] = array1d[i];
+                 if (row == x.length-count-1) {
+                     direction++;    // shifting left
+                 }
+            } else if (direction == 3) {      // left
+                 x[row][col--] = array1d[i];
+                 if (col == count) {
+                     direction++;      // shifting up
+                     count++;
+                 }
+            } else if (direction == 4) {       // up
+                 x[row--][col] = array1d[i];
+                 if (row == count-1) {
+                     direction = 1;      // shifting right
+                     col++;
+                     row++;
+                 }
+            }
+        }
+
+        return x;
     }
 
     /**
@@ -71,7 +147,9 @@ public class Snail {
      * @param array1d
      */
     private static void print1dArray(int[] array1d) {
-
+        for (int i : array1d) {
+            System.out.print(i + " ");
+        }
     }
 
     /**
@@ -84,7 +162,12 @@ public class Snail {
      * @param array2d
      */
     private static void print2dArray(int[][] array2d) {
-
+        for (int[] i : array2d) {
+            for (int j : i) {
+                System.out.print(j + "\t");
+            }
+            System.out.println();
+        }
     }
 
     /**
@@ -97,9 +180,9 @@ public class Snail {
      * @return
      */
     private static boolean isPerfectSquare(int[] array1d) {
-        return false;
+        double x = Math.sqrt(array1d.length);
+        return ((x - Math.floor(x)) == 0);
     }
-
 
     /**
      *
@@ -111,8 +194,10 @@ public class Snail {
      * @return
      */
     private static boolean isPerfectSquare(int[][] array2d) {
-        return false;
+        for (int i = 0; i < array2d.length; i++) {
+            if (array2d.length != array2d[i].length) return false;
+        }
+
+        return true;
     }
-
-
 }
